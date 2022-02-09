@@ -58,6 +58,10 @@ def build_dataset(config, use_word):
                     words_line.append(vocab.get(word, vocab.get(UNK)))
                 contents.append((words_line, int(label), seq_len))
         return contents #[([...],0), ([...],1),...]
+    train = load_dataset(config.train_path, config.pad_size)
+    dev = load_dataset(config.dev_path, config.pad_size)
+    test = load_dataset(config.test_path, config.pad_size)
+    return vocab, train, dev, test
 
 class DatasetIterater(object):
     def __init__(self, batches, batch_size, device):

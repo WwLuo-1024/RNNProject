@@ -7,7 +7,7 @@ from importlib import import_module
 from tensorboardX import SummaryWriter
 
 parser = argparse.ArgumentParser(description = 'Chinese Text Classification')
-parser.add_argument('--model', type = str, required = True, help = 'choose a model: TextCNN, TextRNN, FastText, TextRNN_Att, DPCNN, Transformer')
+parser.add_argument('--model', default='TextRNN', type = str, help = 'choose a model: TextCNN, TextRNN, FastText, TextRNN_Att, DPCNN, Transformer')
 parser.add_argument('--embedding', default = 'pre_trained', type = str, help = 'randon or pre_trained')
 parser.add_argument('--word', default = False, type = bool, help = 'True for word,  False for char')
 args = parser.parse_args()
@@ -20,9 +20,13 @@ if __name__ == '__main__':
     if args.embedding == 'random':
         embedding = 'random'
     model_name = args.model #TextCNN, TextRNN
-    from utils import build_dataset, build_iterator, get_time_dif
+    if model_name == 'FastText':
+        from utils_fasttext import build_dataset, build_iterator, get_time_dif
+        embedding = 'random'
+    else:
+        from utils import build_dataset, build_iterator, get_time_dif
 
-    x = import_module('models.' + model_name)
+    x = import_module('Models.' + model_name)
     config = x.Config(dataset,embedding)
     np.random.seed(1)
     torch.manual_seed(1)

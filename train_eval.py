@@ -7,12 +7,12 @@ import time
 from utils import get_time_dif
 
 #权重初始化 默认xaiver
-def init_network(model, method = 'xaiver', exclude = 'embedding'):
+def init_network(model, method = 'xavier', exclude = 'embedding'):
     for name, w in model.named_parameters():
         if exclude not in name:
             if 'weight' in name:
                 if method == 'xavier':
-                    nn.init.xavier_uniform_(w)
+                    nn.init.xavier_normal_(w)
                 elif method == 'kaiming':
                     nn.init.kaiming_normal_(w)
                 else:
@@ -100,7 +100,7 @@ def evaluate(config, model, data_iter, test = False):
             loss = F.cross_entropy(outputs, labels)
             loss_total += loss
             labels = labels.data.cpu().numpy()
-            predic = torch.max(outputs.data, 1)[1].cpu.numpy()
+            predic = torch.max(outputs.data, 1)[1].cpu().numpy()
             labels_all = np.append(labels_all, labels)
             predict_all = np.append(predict_all, predic)
 
