@@ -2,6 +2,7 @@ import time
 import torch
 import numpy as np
 import argparse
+from train_eval import train, init_network
 from importlib import import_module
 from tensorboardX import SummaryWriter
 
@@ -33,3 +34,15 @@ if __name__ == '__main__':
     vocab, train_data, dev_data, test_data = build_dataset(config, args.word)
     train_iter = build_iterator(train_data, config)
     dev_iter = build_iterator(dev_data, config)
+    test_iter = build_iterator(test_data, config)
+    time_dif = get_time_dif(start_time)
+    print("Time Usage: ", time_dif)
+
+    #Train
+    config.n_vocab = len(vocab)
+    model = x.Model(config).to(config.device)
+    writer = SummaryWriter(log_dir = config.log_path + '/' + time.strftime('%m-%d_%H.%M', time.localtime()))
+    if model_name != 'Transformer':
+        init_network(model)
+    print(model.parameters)
+    train(config, model, train_iter, dev_iter, test_iter, writer)
